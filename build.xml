@@ -1,0 +1,45 @@
+<project name = "jdbc-ord-mgmt" default = "run-tests">
+    <target name = "clean">
+        <delete dir = "build"/>
+    </target>
+
+    <target name="init">
+        <mkdir dir="build/classes/test"/>
+        <mkdir dir="build/classes/src"/>
+        <!--<copy file="junit-4.10.jar" tofile="build/dist/lib/test/junit-4.10.jar"/>-->
+        <!--<copy file="mariadb-java-client-1.1.5.jar" tofile="build/dist/lib/mariadb/mariadb-java-client-1.1.5.jar"/>-->
+
+    </target>
+
+    <target name = "compile" depends = "init">
+        <javac srcdir = "src" destdir = "build/classes/src" includeAntRuntime = "false">
+        </javac>
+    </target>
+
+    <target name = "compile-tests" depends = "compile">
+        <javac srcdir = "test" destdir= "build/classes/test"
+               classpath="junit-4.10.jar;
+                        build/classes/src;
+                        mariadb-java-client-1.1.5.jar"
+               includeAntRuntime = "false">
+        </javac>
+    </target>
+
+    <target name="run-tests" depends="compile-tests">
+        <junit>
+            <classpath>
+                <pathelement location="build/classes/src" />
+                <pathelement location="build/classes/test" />
+                <pathelement location="junit-4.10.jar"/>
+                <pathelement location="mariadb-java-client-1.1.5.jar"/>
+            </classpath>
+            <batchtest>
+                <fileset dir="build/classes/test">
+                    <include name="**/*Test*" />
+                    <exclude name="**/*$*.class"/>
+                </fileset>
+            </batchtest>
+            <formatter type = "brief" usefile = "false"/>
+        </junit>
+    </target>
+</project>
